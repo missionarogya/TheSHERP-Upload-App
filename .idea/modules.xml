@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/SHERP-Upload.iml" filepath="$PROJECT_DIR$/SHERP-Upload.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TheSHERP-Upload-App.iml" filepath="$PROJECT_DIR$/TheSHERP-Upload-App.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

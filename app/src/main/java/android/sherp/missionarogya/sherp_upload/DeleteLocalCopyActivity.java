@@ -28,7 +28,7 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
                     DeleteLocalCopyActivity.this.finish();
                 }
                 else{
-                    Toast.makeText(DeleteLocalCopyActivity.this, "Delete unsuccessful.Please delete the file manually!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeleteLocalCopyActivity.this, "Delete unsuccessful. Please delete the file manually!", Toast.LENGTH_SHORT).show();
                     DeleteLocalCopyActivity.this.finish();
                 }
             }
