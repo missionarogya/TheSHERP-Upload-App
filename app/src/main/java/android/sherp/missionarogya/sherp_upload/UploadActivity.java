@@ -92,7 +92,7 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private boolean createJSONbackup(){
-        boolean success = false;
+        boolean success ;
         String source = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + "Sherp" + File.separator + "InterviewData" + File.separator + "interviewData.json";
         String dest = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + "Sherp";
         File dir = new File(dest);
@@ -150,7 +150,7 @@ public class UploadActivity extends AppCompatActivity {
                     UploadActivity.this.finish();
                 }
             }else{
-                Toast.makeText(UploadActivity.this, "Sherp folder does not exist", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UploadActivity.this, "Sherp folder does not exist.", Toast.LENGTH_SHORT).show();
                 UploadActivity.this.finish();
             }
             }catch(JSONException e){
@@ -171,7 +171,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private boolean buildJSON(){
         boolean success ;
-        if(validateJSON() == false) {
+        if(!validateJSON()) {
             //JSON is not valid hence building json
             File interviewDataDir_ = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Sherp");
             if (interviewDataDir_.exists() && interviewDataDir_.isDirectory()) {
@@ -187,14 +187,14 @@ public class UploadActivity extends AppCompatActivity {
                             pw.close();
                             success = true;
                         } catch (IOException e) {
-                            Toast.makeText(UploadActivity.this, "Error writing file: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(UploadActivity.this, "Error(I/O) writing file: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             success = false;
                         } catch (Exception e) {
                             Toast.makeText(UploadActivity.this, "Error writing file: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             success = false;
                         }
                     } else {
-                        Toast.makeText(UploadActivity.this, "The file interviewData.json does not exist. ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(UploadActivity.this, "The interviewData json does not exist. ", Toast.LENGTH_LONG).show();
                         success = false;
                         UploadActivity.this.finish();
                     }
