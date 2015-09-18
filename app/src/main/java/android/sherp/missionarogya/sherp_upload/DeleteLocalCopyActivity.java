@@ -25,11 +25,11 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
                 deleteLocalCopy.setClickable(false);
                 if(deleteLocalCopy()) {
                     Toast.makeText(DeleteLocalCopyActivity.this, "Successfully deleted the local copy of the interview JSON.", Toast.LENGTH_SHORT).show();
-                    DeleteLocalCopyActivity.this.finish();
+                    //DeleteLocalCopyActivity.this.finish();
                 }
                 else{
                     Toast.makeText(DeleteLocalCopyActivity.this, "Delete unsuccessful. Please delete the file manually!", Toast.LENGTH_SHORT).show();
-                    DeleteLocalCopyActivity.this.finish();
+                    //DeleteLocalCopyActivity.this.finish();
                 }
             }
         });
