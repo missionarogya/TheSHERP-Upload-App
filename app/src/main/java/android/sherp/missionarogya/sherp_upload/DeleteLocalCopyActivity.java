@@ -23,14 +23,19 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deleteLocalCopy.setClickable(false);
-                if(deleteLocalCopy()) {
+                if (deleteLocalCopy()) {
                     Toast.makeText(DeleteLocalCopyActivity.this, "Successfully deleted the local copy of the interview JSON.", Toast.LENGTH_SHORT).show();
-                    //DeleteLocalCopyActivity.this.finish();
-                }
-                else{
+                } else {
                     Toast.makeText(DeleteLocalCopyActivity.this, "Delete unsuccessful. Please delete the file manually!", Toast.LENGTH_SHORT).show();
-                    //DeleteLocalCopyActivity.this.finish();
                 }
+            }
+        });
+        final Button exit = (Button) findViewById(R.id.exit);
+        exit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //roll back changes
+                DeleteLocalCopyActivity.this.finish();
             }
         });
     }

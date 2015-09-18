@@ -20,10 +20,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.channels.FileChannel;
-
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+
 
 public class UploadActivity extends AppCompatActivity {
     JSONArray interviewJSON;
@@ -33,50 +32,31 @@ public class UploadActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload);
 
-        final ImageButton go = (ImageButton) findViewById(R.id.go);
         final Button upload = (Button) findViewById(R.id.buttonUpload);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 upload.setClickable(false);
-                if (buildJSON()) {
-                    Toast.makeText(UploadActivity.this, "Successfully build JSON file.", Toast.LENGTH_SHORT).show();
-                    if (validateJSON()) {
-                        Toast.makeText(UploadActivity.this, "This is a valid JSON file.", Toast.LENGTH_SHORT).show();
-                        if (createJSONbackup()) {
-                            Toast.makeText(UploadActivity.this, "Successfully created a backup of the interview JSON.", Toast.LENGTH_SHORT).show();
-                            if (uploadToServer()) {
-                                Toast.makeText(UploadActivity.this, "Successfully uploaded the interview JSON to server.", Toast.LENGTH_SHORT).show();
-                                go.setVisibility(View.VISIBLE);
-                                go.setClickable(true);
-                                go.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        Intent intent = new Intent(UploadActivity.this, DeleteLocalCopyActivity.class);
-                                        UploadActivity.this.startActivity(intent);
-                                        UploadActivity.this.finish();
-                                    }
-                                });
-                            } else {
-                                Toast.makeText(UploadActivity.this, "Error in uploading to server.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(UploadActivity.this, "Error in creating JSON backup. Please do it manually!", Toast.LENGTH_SHORT).show();
+                if(buildJSON()){
+                    final ImageButton go = (ImageButton) findViewById(R.id.go);
+                    go.setVisibility(View.VISIBLE);
+                    go.setClickable(true);
+                    go.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(UploadActivity.this, DeleteLocalCopyActivity.class);
+                            UploadActivity.this.startActivity(intent);
+                            UploadActivity.this.finish();
                         }
-                    } else {
-                        Toast.makeText(UploadActivity.this, "Invalid JSON.", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(UploadActivity.this, "Error in building JSON file.", Toast.LENGTH_SHORT).show();
+                    });
                 }
-                // UploadActivity.this.finish();
             }
         });
         final Button exit = (Button) findViewById(R.id.exit);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //roll back changes
+                interviewJSON = null;
                 UploadActivity.this.finish();
             }
         });
@@ -114,53 +94,25 @@ public class UploadActivity extends AppCompatActivity {
             outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
             inputChannel.close();
             outputChannel.close();
-            success = true;
+            Toast.makeText(UploadActivity.this, "Successfully created a JSON backup in /Documents/Sherp/Backup.", Toast.LENGTH_SHORT).show();
+            success = uploadToServer();
+            if (success) {
+                Toast.makeText(UploadActivity.this, "Successfully uploaded the interview JSON to server.", Toast.LENGTH_SHORT).show();
+            }
         }catch(IOException e){
-            Toast.makeText(UploadActivity.this, "Error in creating backup: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(UploadActivity.this, "Error in creating JSON backup: "+e.getMessage()+" Please do it manually!", Toast.LENGTH_SHORT).show();
             success = false;
         }
         return success;
     }
 
-    private boolean validateJSON(){
-        boolean success = true;
+    private boolean validateJSON(String jsonContent){
+        boolean success = false;
         try{
-            File interviewDataDir_ = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Sherp");
-            if(interviewDataDir_.exists() && interviewDataDir_.isDirectory()){
-                File interviewDataDir = new File(interviewDataDir_, "InterviewData");
-                if(interviewDataDir.exists() && interviewDataDir.isDirectory()) {
-                    File interviewDataFile = new File(interviewDataDir, "interviewData.json");
-                    if (interviewDataFile.exists() && interviewDataFile.isFile()) {
-                        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-                        FileInputStream fis = new FileInputStream(interviewDataFile);
-                        int content;
-                        while ((content = fis.read()) != -1) {
-                            // convert to char and display it
-                            System.out.print((char) content);
-                            byteArrayOutputStream.write((char) content);
-                        }
-                        fis.close();
-                        interviewJSON = new JSONArray(byteArrayOutputStream.toString());
-                    }else{
-                        Toast.makeText(UploadActivity.this, "Interview JSON does not exist.", Toast.LENGTH_SHORT).show();
-                        UploadActivity.this.finish();
-                    }
-                }else{
-                    Toast.makeText(UploadActivity.this, "Interview Folder does not exist. ", Toast.LENGTH_SHORT).show();
-                    UploadActivity.this.finish();
-                }
-            }else{
-                Toast.makeText(UploadActivity.this, "Sherp folder does not exist.", Toast.LENGTH_SHORT).show();
-                UploadActivity.this.finish();
-            }
+            interviewJSON = new JSONArray(jsonContent);
+            success = true;
             }catch(JSONException e){
-                Toast.makeText(UploadActivity.this, "Invalid JSON: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                success = false;
-            }catch(FileNotFoundException e){
-                Toast.makeText(UploadActivity.this, "File not found: "+e.getMessage(), Toast.LENGTH_SHORT).show();
-                success = false;
-            }catch(IOException e){
-                Toast.makeText(UploadActivity.this, "Error(I/O): "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(UploadActivity.this, "Invalid JSON: "+e.getMessage(), Toast.LENGTH_SHORT).show();
                 success = false;
             }catch(Exception e){
                 Toast.makeText(UploadActivity.this, "Error: "+e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -170,9 +122,7 @@ public class UploadActivity extends AppCompatActivity {
     }
 
     private boolean buildJSON(){
-        boolean success ;
-        if(!validateJSON()) {
-            //JSON is not valid hence building json
+            boolean success;
             File interviewDataDir_ = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Sherp");
             if (interviewDataDir_.exists() && interviewDataDir_.isDirectory()) {
                 File interviewDataDir = new File(interviewDataDir_, "InterviewData");
@@ -180,12 +130,42 @@ public class UploadActivity extends AppCompatActivity {
                     File interviewDataFile = new File(interviewDataDir, "interviewData.json");
                     if (interviewDataFile.exists() && interviewDataFile.isFile()) {
                         try {
-                            PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(interviewDataFile, true)));
-                            pw.println("    }");
-                            pw.println("]");
-                            pw.flush();
-                            pw.close();
-                            success = true;
+                            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                            FileInputStream fis = new FileInputStream(interviewDataFile);
+                            int content;
+                            while ((content = fis.read()) != -1) {
+                                byteArrayOutputStream.write((char) content);
+                            }
+                            fis.close();
+                            String jsonContent = byteArrayOutputStream.toString();
+                            success = validateJSON(jsonContent);
+                            if(!success)
+                            {
+                                PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(interviewDataFile, true)));
+                                pw.println("    }");
+                                pw.println("]");
+                                pw.flush();
+                                pw.close();
+                                byteArrayOutputStream = new ByteArrayOutputStream();
+                                fis = new FileInputStream(interviewDataFile);
+                                while ((content = fis.read()) != -1) {
+                                   byteArrayOutputStream.write((char) content);
+                                }
+                                fis.close();
+                                jsonContent = byteArrayOutputStream.toString();
+                                success = validateJSON(jsonContent);
+                                if(success) {
+                                    Toast.makeText(UploadActivity.this, "JSON is valid.", Toast.LENGTH_SHORT).show();
+                                    success = createJSONbackup();
+                                }
+                            }
+                            else{
+                                Toast.makeText(UploadActivity.this, "JSON is valid.", Toast.LENGTH_SHORT).show();
+                                success = createJSONbackup();
+                            }
+                        }catch(FileNotFoundException e){
+                            Toast.makeText(UploadActivity.this, "File not found: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            success = false;
                         } catch (IOException e) {
                             Toast.makeText(UploadActivity.this, "Error(I/O) writing file: " + e.getMessage(), Toast.LENGTH_LONG).show();
                             success = false;
@@ -194,24 +174,17 @@ public class UploadActivity extends AppCompatActivity {
                             success = false;
                         }
                     } else {
-                        Toast.makeText(UploadActivity.this, "The interviewData json does not exist. ", Toast.LENGTH_LONG).show();
+                        Toast.makeText(UploadActivity.this, "The interviewData JSON does not exist. ", Toast.LENGTH_LONG).show();
                         success = false;
-                        UploadActivity.this.finish();
                     }
                 } else {
                     Toast.makeText(UploadActivity.this, "The folder InterviewData does not exist. ", Toast.LENGTH_LONG).show();
                     success = false;
-                    UploadActivity.this.finish();
                 }
             } else {
                 Toast.makeText(UploadActivity.this, "The folder Sherp does not exist. ", Toast.LENGTH_LONG).show();
                 success = false;
-                UploadActivity.this.finish();
             }
-        }
-        else{
-            success = true;
-        }
         return success;
     }
 
@@ -233,7 +206,6 @@ public class UploadActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

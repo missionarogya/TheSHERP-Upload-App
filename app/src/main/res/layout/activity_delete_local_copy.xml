@@ -7,6 +7,16 @@
     tools:context="android.sherp.missionarogya.sherp_upload.DeleteLocalCopyActivity">
 
     <Button
+        android:textColor="#00F"
+        android:textSize="13pt"
+        android:id="@+id/exit"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="EXIT"
+        style="?android:attr/borderlessButtonStyle"/>
+
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
