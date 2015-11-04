@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class DeleteLocalCopyActivity extends AppCompatActivity {
+    Logging logfile = Logging.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,11 +24,16 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deleteLocalCopy.setClickable(false);
+                String statusMessage;
                 if (deleteLocalCopy()) {
-                    Toast.makeText(DeleteLocalCopyActivity.this, "Successfully deleted the local copy of the interview JSON.", Toast.LENGTH_SHORT).show();
+                    statusMessage = "Successfully deleted the local copy of the interview JSON.";
                 } else {
-                    Toast.makeText(DeleteLocalCopyActivity.this, "Delete unsuccessful. Please delete the file manually!", Toast.LENGTH_SHORT).show();
+                    statusMessage ="Delete unsuccessful. Please delete the file manually!";
                 }
+                Toast.makeText(DeleteLocalCopyActivity.this, statusMessage , Toast.LENGTH_SHORT).show();
+                statusMessage = statusMessage + "\nExiting from app.\n-------------------------------------------------------------------------------------------------------------------------------------------------\n";
+                logfile.setLogMessage(statusMessage);
+                Logging.setInstance(logfile);
             }
         });
         final Button exit = (Button) findViewById(R.id.exit);
@@ -35,6 +41,8 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //roll back changes
+                Logging.writeToLogFile(logfile.getLogMessage());
+                Logging.setInstance(null);
                 DeleteLocalCopyActivity.this.finish();
             }
         });

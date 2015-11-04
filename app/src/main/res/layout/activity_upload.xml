@@ -15,16 +15,13 @@
         android:text="EXIT"
         style="?android:attr/borderlessButtonStyle"/>
 
-<Button
+<ImageButton
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:text="UPLOAD"
-    android:textSize="25dp"
-    android:textStyle="bold"
-    android:textColor="@android:color/holo_green_light"
-    android:background="@android:color/background_dark"
-    android:id="@+id/buttonUpload"/>
+    android:background="@android:color/transparent"
+    android:id="@+id/buttonUpload"
+    android:src="@drawable/upload" />
 
     <ImageButton
         android:id="@+id/go"
@@ -35,8 +32,7 @@
         android:visibility="invisible"
         android:clickable="false"
         android:background="@android:color/transparent"
-        android:src="@drawable/go"
-        android:scaleType="fitXY" />
+        android:src="@drawable/go"/>
 
 
 </RelativeLayout>
