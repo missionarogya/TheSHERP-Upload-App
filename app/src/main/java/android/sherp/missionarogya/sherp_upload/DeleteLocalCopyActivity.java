@@ -1,5 +1,6 @@
 package android.sherp.missionarogya.sherp_upload;
 
+import android.content.Intent;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -43,6 +44,8 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
                 //roll back changes
                 Logging.writeToLogFile(logfile.getLogMessage());
                 Logging.setInstance(null);
+                Intent intent = new Intent(DeleteLocalCopyActivity.this, LoginActivity.class);
+                DeleteLocalCopyActivity.this.startActivity(intent);
                 DeleteLocalCopyActivity.this.finish();
             }
         });

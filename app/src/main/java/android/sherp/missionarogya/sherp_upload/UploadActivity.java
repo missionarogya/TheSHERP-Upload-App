@@ -84,6 +84,8 @@ public class UploadActivity extends AppCompatActivity {
                 Logging.writeToLogFile(logfile.getLogMessage());
                 logfile.setJsonString(null);
                 Logging.setInstance(null);
+                Intent intent = new Intent(UploadActivity.this, LoginActivity.class);
+                UploadActivity.this.startActivity(intent);
                 UploadActivity.this.finish();
             }
         });
@@ -286,14 +288,15 @@ class JSONParser extends AsyncTask<String, Void, String> {
     public String doInBackground(String... params) {
         try {
             logmessage = logmessage + "Uploading to server....\n";
-            URL url = new URL("http://springdemo11-sampledemosite.rhcloud.com/profile/answer");
+            URL url = new URL("http://springdemo11-sampledemosite.rhcloud.com/profile/PushInterviewDataToServer");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             logmessage = logmessage + logfile.getJsonString() + "\n";
-            String input = "{\"sessionId\": 0, \"qaset_id\": \"string\",  \"interviewer_id\": \"string\",  \"interviewee_id\": \"string\",  \"interview_dttm\": {    \"latitude\": 0,    \"longitude\": 0  },  \"venue\": \"string\",  \"answer\": [ {      \"question\": \"string\",      \"answer\": \"string\"    }  ]}";
+            String input = "{\"answers\":"+logfile.getJsonString()+"}";
             OutputStream os = conn.getOutputStream();
+            os.flush();
             os.write(input.getBytes());
             os.flush();
             BufferedReader br = new BufferedReader(new InputStreamReader(
@@ -304,7 +307,7 @@ class JSONParser extends AsyncTask<String, Void, String> {
             }
             conn.disconnect();
             } catch (Exception e) {
-                logmessage = logmessage + e;
+                logmessage = logmessage + "\nFATAL ERROR :: "+ e;
             }
             return output;
     }
