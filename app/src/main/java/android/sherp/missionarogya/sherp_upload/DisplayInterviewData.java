@@ -28,7 +28,9 @@ public class DisplayInterviewData extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),sherpData.getInterviewData(),Toast.LENGTH_LONG).show();
 
         try{
-            validateJSON(sherpData.getInterviewData());
+            if(validateJSON(sherpData.getInterviewData())){
+
+            }
         }catch(Exception e){
             Toast.makeText(DisplayInterviewData.this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -50,6 +52,7 @@ public class DisplayInterviewData extends AppCompatActivity {
         boolean success;
         try{
             interviewJSON = new JSONArray(jsonContent);
+            Toast.makeText(DisplayInterviewData.this, "Valid JSON", Toast.LENGTH_LONG).show();
             logfile.setJsonString(interviewJSON.toString());
             logfile.setInstance(logfile);
             success = true;

@@ -211,7 +211,7 @@ class JSONDownloader extends AsyncTask<String, Void, String> {
                 logmessage = logmessage + output +"\n";
                 if(output.length() > 0){
                     output = output.substring(1,output.length()-1);
-                    sherpData.setInterviewData(output.substring(79,output.length()));
+                    sherpData.setInterviewData(output.substring(75,output.length()));
                     SherpData.setInstance(sherpData);
                     String[] arr = output.split(",");
                     for (String s:arr) {
