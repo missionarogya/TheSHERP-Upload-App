@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 public class UploadActivity extends AppCompatActivity {
+    SherpData sherpData = SherpData.getInstance();
     JSONArray interviewJSON;
     String source = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) + File.separator + "Sherp" + File.separator + "InterviewData" + File.separator + "interviewData.json";
     Logging logfile = Logging.getInstance();
@@ -98,7 +99,7 @@ public class UploadActivity extends AppCompatActivity {
 
     private boolean uploadToServer() throws Exception{
         boolean success;
-        final JSONParser mJSONParser = new JSONParser(logfile, logmessage, UploadActivity.this);
+        final JSONParser mJSONParser = new JSONParser(logfile, logmessage, UploadActivity.this, sherpData);
         try {
             String status = mJSONParser.execute("").getStatus().name();
             Toast.makeText(UploadActivity.this, "Status of upload process: " + status + "\n", Toast.LENGTH_LONG).show();
@@ -272,16 +273,18 @@ public class UploadActivity extends AppCompatActivity {
 }
 
 class JSONParser extends AsyncTask<String, Void, String> {
+    SherpData sherpData;
     String output="";
     String logmessage;
     Logging logfile;
     UploadActivity activity;
     ProgressDialog progressDialog;
 
-    public JSONParser(Logging logfile, String logmessage, UploadActivity activity) {
+    public JSONParser(Logging logfile, String logmessage, UploadActivity activity, SherpData sherpData) {
         this.logfile =  logfile ;
         this.logmessage = logmessage;
         this.activity = activity;
+        this.sherpData = sherpData;
     }
 
     @Override
@@ -301,15 +304,31 @@ class JSONParser extends AsyncTask<String, Void, String> {
             os.flush();
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
-            logmessage = logmessage + "Response from server: ";
+            logmessage = logmessage + "Response from server: "+"\n";
             while ((output = br.readLine()) != null) {
                 logmessage = logmessage + output +"\n";
+                if(output.length() > 0){
+                    output = output.substring(1,output.length()-1);
+                    String[] arr = output.split(",");
+                    for (String s:arr) {
+                        String[] arr1 = s.split(":");
+                        if(arr1[0].substring(1,arr1[0].length()-1).equals("httpStatus")){
+                            sherpData.setHttpStatusUpload(arr1[1].substring(1, arr1[1].length() - 1));
+                            SherpData.setInstance(sherpData);
+                        }
+                        if(arr1[0].substring(1,arr1[0].length()-1).equals("message")){
+                            sherpData.setMessageUpload(arr1[1].substring(1,arr1[1].length()-1));
+                            SherpData.setInstance(sherpData);
+                        }
+                    }
+                }
             }
             conn.disconnect();
             } catch (Exception e) {
                 logmessage = logmessage + "\nFATAL ERROR :: "+ e;
             }
-            return output;
+
+        return output;
     }
 
     @Override
