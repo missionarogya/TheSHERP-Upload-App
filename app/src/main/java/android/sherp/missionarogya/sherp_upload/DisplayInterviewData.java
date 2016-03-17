@@ -1,38 +1,220 @@
 package android.sherp.missionarogya.sherp_upload;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class DisplayInterviewData extends AppCompatActivity {
     SherpData sherpData = SherpData.getInstance();
     JSONArray interviewJSON;
     Logging logfile = Logging.getInstance();
     String logmessage = "";
+    MediaPlayer mp = new MediaPlayer();
+    String currentlyPlaying = "none";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_interview_data);
-
-        Toast.makeText(getApplicationContext(), sherpData.getHttpStatusDownload(), Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),sherpData.getMessageDownload(),Toast.LENGTH_SHORT).show();
-        Toast.makeText(getApplicationContext(),sherpData.getInterviewData(),Toast.LENGTH_LONG).show();
-
+        String interviewee = "";
+        String qasetId = "";
+        String venue = "";
+        String interviewer = "";
+        String interviewStartTime = "";
+        String interviewEndTime = "";
         try{
+            TableLayout table = (TableLayout)findViewById(R.id.interviewDataTable);
             if(validateJSON(sherpData.getInterviewData())){
+                try {
+                    JSONArray interviewArray = new JSONArray(sherpData.getInterviewData());
+                    for(int i=0; i<interviewArray.length(); i++){
 
+                        TableRow row = new TableRow(this);
+                        TableRow.LayoutParams lp = new TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT);
+                        row.setLayoutParams(lp);
+                        row.setPadding(8, 8, 8, 8);
+                        row.setBackgroundColor(Color.WHITE);
+                        row.setGravity(Gravity.CENTER);
+
+                        JSONObject interviewDetails = interviewArray.getJSONObject(i);
+
+                        qasetId = interviewDetails.getString("qaset_id");
+
+                        TextView txtQasetId = new TextView(this);
+                        txtQasetId.setText(qasetId);
+                        txtQasetId.setGravity(Gravity.CENTER);
+                        txtQasetId.setTextColor(Color.WHITE);
+                        txtQasetId.setBackgroundColor(Color.BLACK);
+                        txtQasetId.setTypeface(Typeface.DEFAULT);
+                        txtQasetId.setLayoutParams(new TableRow.LayoutParams(0));
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)txtQasetId.getLayoutParams();
+                        params.setMargins(0, 0, 10, 0);
+                        txtQasetId.setLayoutParams(params);
+                        row.addView(txtQasetId);
+
+                        venue = interviewDetails.getString("venue");
+
+                        TextView txtVenue = new TextView(this);
+                        txtVenue.setText(venue);
+                        txtVenue.setGravity(Gravity.CENTER);
+                        txtVenue.setTextColor(Color.WHITE);
+                        txtVenue.setBackgroundColor(Color.BLACK);
+                        txtVenue.setTypeface(Typeface.DEFAULT);
+                        txtVenue.setLayoutParams(new TableRow.LayoutParams(5));
+                        LinearLayout.LayoutParams qasetParams = (LinearLayout.LayoutParams)txtVenue.getLayoutParams();
+                        qasetParams.setMargins(0, 0, 10, 0);
+                        txtVenue.setLayoutParams(qasetParams);
+                        row.addView(txtVenue);
+
+                        interviewer = interviewDetails.getString("interviewer_id");
+
+                        TextView txtInterviewer = new TextView(this);
+                        txtInterviewer.setText(interviewer);
+                        txtInterviewer.setGravity(Gravity.CENTER);
+                        txtInterviewer.setTextColor(Color.WHITE);
+                        txtInterviewer.setBackgroundColor(Color.BLACK);
+                        txtInterviewer.setTypeface(Typeface.DEFAULT);
+                        txtInterviewer.setLayoutParams(new TableRow.LayoutParams(1));
+                        LinearLayout.LayoutParams interviewerParams = (LinearLayout.LayoutParams)txtInterviewer.getLayoutParams();
+                        interviewerParams.setMargins(0, 0, 10, 0);
+                        txtInterviewer.setLayoutParams(interviewerParams);
+                        row.addView(txtInterviewer);
+
+                        interviewee = interviewDetails.getString("interviewee_id");
+
+                        TextView txtInterviewee = new TextView(this);
+                        txtInterviewee.setText(interviewee);
+                        txtInterviewee.setGravity(Gravity.CENTER);
+                        txtInterviewee.setTextColor(Color.WHITE);
+                        txtInterviewee.setBackgroundColor(Color.BLACK);
+                        txtInterviewee.setTypeface(Typeface.DEFAULT);
+                        txtInterviewee.setLayoutParams(new TableRow.LayoutParams(2));
+                        LinearLayout.LayoutParams intervieweeParams = (LinearLayout.LayoutParams)txtInterviewee.getLayoutParams();
+                        intervieweeParams.setMargins(0, 0, 10, 0);
+                        txtInterviewee.setLayoutParams(intervieweeParams);
+                        row.addView(txtInterviewee);
+
+                        JSONObject interviewTime = interviewDetails.getJSONObject("interview_dttm");
+                        interviewStartTime = interviewTime.getString("startdt_tm");
+                        interviewEndTime = interviewTime.getString("enddt_tm");
+
+                        TextView txtInterviewStartTime = new TextView(this);
+                        txtInterviewStartTime.setText(interviewStartTime);
+                        txtInterviewStartTime.setGravity(Gravity.CENTER);
+                        txtInterviewStartTime.setTextColor(Color.WHITE);
+                        txtInterviewStartTime.setBackgroundColor(Color.BLACK);
+                        txtInterviewStartTime.setTypeface(Typeface.DEFAULT);
+                        txtInterviewStartTime.setLayoutParams(new TableRow.LayoutParams(3));
+                        LinearLayout.LayoutParams interviewStartTimeParams = (LinearLayout.LayoutParams)txtInterviewStartTime.getLayoutParams();
+                        interviewStartTimeParams.setMargins(0, 0, 10, 0);
+                        txtInterviewStartTime.setLayoutParams(interviewStartTimeParams);
+                        row.addView(txtInterviewStartTime);
+
+                        TextView txtInterviewEndTime = new TextView(this);
+                        txtInterviewEndTime.setText(interviewEndTime);
+                        txtInterviewEndTime.setGravity(Gravity.CENTER);
+                        txtInterviewEndTime.setTextColor(Color.WHITE);
+                        txtInterviewEndTime.setBackgroundColor(Color.BLACK);
+                        txtInterviewEndTime.setTypeface(Typeface.DEFAULT);
+                        txtInterviewEndTime.setLayoutParams(new TableRow.LayoutParams(4));
+                        LinearLayout.LayoutParams interviewEndTimeParams = (LinearLayout.LayoutParams)txtInterviewEndTime.getLayoutParams();
+                        interviewEndTimeParams.setMargins(0, 0, 10, 0);
+                        txtInterviewEndTime.setLayoutParams(interviewEndTimeParams);
+                        row.addView(txtInterviewEndTime);
+
+
+                        JSONArray interviewAnswers = interviewDetails.getJSONArray("answer");
+                        for(int k=0; k<interviewAnswers.length(); k++){
+
+                            TextView txtAnswers = new TextView(this);
+
+                            JSONObject interviewAnswersObj = interviewAnswers.getJSONObject(k);
+                            String question = interviewAnswersObj.getString("question");
+                            String answer = interviewAnswersObj.getString("answer");
+
+                            txtAnswers.setText(answer);
+
+                            if(question.equals("q_district_eng")){
+                                txtAnswers.setLayoutParams(new TableRow.LayoutParams(6));
+                                LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
+                                answerParams.setMargins(0, 0, 10, 0);
+                                txtAnswers.setLayoutParams(answerParams);
+                            }else if(question.equals("q_block_eng")){
+                                txtAnswers.setLayoutParams(new TableRow.LayoutParams(7));
+                                LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
+                                answerParams.setMargins(0, 0, 10, 0);
+                                txtAnswers.setLayoutParams(answerParams);
+                            }else if(question.equals("q_village_eng")){
+                                txtAnswers.setLayoutParams(new TableRow.LayoutParams(8));
+                                LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
+                                answerParams.setMargins(0, 0, 10, 0);
+                                txtAnswers.setLayoutParams(answerParams);
+                            }else if(question.equals("q_awccode_eng")){
+                                txtAnswers.setLayoutParams(new TableRow.LayoutParams(9));
+                                LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
+                                answerParams.setMargins(0, 0, 10, 0);
+                                txtAnswers.setLayoutParams(answerParams);
+                            }
+
+                            txtAnswers.setGravity(Gravity.CENTER);
+                            txtAnswers.setTextColor(Color.WHITE);
+                            txtAnswers.setBackgroundColor(Color.BLACK);
+                            txtAnswers.setTypeface(Typeface.DEFAULT);
+                            row.addView(txtAnswers);
+                        }
+                        ImageView audio = new ImageView(this);
+                        audio.setPadding(0, 0, 2, 0);
+                        audio.setImageResource(R.drawable.play);
+                        audio.setBackgroundColor(Color.BLACK);
+                        audio.setLayoutParams(new TableRow.LayoutParams(10));
+                        row.addView(audio);
+
+                        if(!interviewee.equals("") && interviewee.length()>0){
+                            final String audioFile = interviewee + ".mp3";
+                            audio.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    playMusic(audioFile);
+                                }
+                            });
+                        }
+                        table.addView(row);
+                    }
+                }catch(JSONException e){
+                    Toast.makeText(DisplayInterviewData.this, "JSON Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+                }catch(Exception e){
+                    Toast.makeText(DisplayInterviewData.this, "Error in display: "+ e.getStackTrace()[0].getLineNumber() + e.toString(), Toast.LENGTH_LONG).show();
+                }
             }
         }catch(Exception e){
-            Toast.makeText(DisplayInterviewData.this, "Error: "+e.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(DisplayInterviewData.this, "Error: "+e.toString(), Toast.LENGTH_LONG).show();
         }
 
         final Button exit = (Button) findViewById(R.id.exit);
@@ -89,4 +271,68 @@ public class DisplayInterviewData extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+    private void playMusic(String audioName){
+        int resume;
+        if(currentlyPlaying.equals(audioName)){
+            resume = 1;
+        }
+        else
+        {
+            currentlyPlaying = audioName;
+            resume = 0;
+        }
+        FileInputStream fis = null;
+        File qasetDir ;
+        File soundFile ;
+        File soundDir;
+        FileDescriptor fd = null;
+        try {
+            File parentDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS), "Sherp");
+            if (parentDir.exists() && parentDir.isDirectory()) {
+                qasetDir = new File(parentDir, "ANC-STI");
+                if (qasetDir.exists() && qasetDir.isDirectory()) {
+                    soundDir = new File(qasetDir, "audio");
+                    if (soundDir.exists() && soundDir.isDirectory()) {
+                        soundFile = new File(soundDir, audioName);
+                        if(soundFile.exists() && soundFile.isFile()){
+                            soundFile.setReadable(true);
+                            fis = new FileInputStream(soundFile.getAbsolutePath());
+                            fd = fis.getFD();
+                        }
+                    }
+                }
+            }
+            if (fd != null ) {
+                if (mp.isPlaying() && resume==1) {
+                    mp.pause();
+                }
+                else {
+                    mp.reset();
+                    mp.setDataSource(fd);
+                    mp.prepare();
+                    mp.start();
+                    fis.close();
+                }
+            }
+        }catch (FileNotFoundException e) {
+            Toast.makeText(DisplayInterviewData.this, "Error(File not found) in playing audio: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            logmessage = logmessage + "\n" + "[File not found Exception]Error in playing audio:" + e.getMessage() + "\n\n";
+        } catch (IllegalStateException e) {
+            Toast.makeText(DisplayInterviewData.this, "Error(Illegal state exception) in playing audio: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            logmessage = logmessage + "\n" + "[Illegal State Exception]Error in playing audio:" + e.getMessage() + "\n\n";
+        } catch (IOException e) {
+            Toast.makeText(DisplayInterviewData.this, "Error(I/O) in playing audio: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            logmessage = logmessage + "\n" + "[Exception]Error(I/O) in playing audio:" + e.getMessage() + "\n\n";
+        }
+        catch (Exception e) {
+            Toast.makeText(DisplayInterviewData.this, "Error in playing audio: "+e.getMessage(), Toast.LENGTH_SHORT).show();
+            logmessage = logmessage + "\n" + "[Exception]Error in playing audio: " + e.getMessage() + "\n\n";
+        }
+        logfile.setLogMessage(logmessage);
+        Logging.setInstance(logfile);
+        Logging.writeToLogFile(logfile.getLogMessage());
+    }
+
 }

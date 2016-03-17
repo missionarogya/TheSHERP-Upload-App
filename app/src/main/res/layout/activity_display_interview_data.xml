@@ -10,6 +10,7 @@
         android:textColor="#00F"
         android:textSize="13pt"
         android:id="@+id/exit"
+        android:clickable="true"
         android:layout_alignParentRight="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -39,7 +40,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="100dp"
                 android:background="@android:color/white"
-                android:id="@+id/hospitalTable">
+                android:id="@+id/interviewDataTable">
 
                 <TableRow
                     android:layout_width="wrap_content"
@@ -49,6 +50,18 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:text=" QASetID "
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:background="@android:color/black"
+                        android:textStyle="bold"
+                        android:id="@+id/textView0"
+                        android:layout_column="0"
+                        android:layout_marginRight="3dp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -155,7 +168,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
                         android:background="@android:color/black"
-                        android:layout_marginRight="0dp"
+                        android:layout_marginRight="3dp"
                         android:textStyle="bold"
                         android:id="@+id/textView9"
                         android:layout_column="9" />
@@ -163,7 +176,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_weight="1"
-                        android:text=" Audio File pf the Interview "
+                        android:text=" Audio File of the Interview "
                         android:layout_height="wrap_content"
                         android:textColor="@android:color/white"
                         android:background="@android:color/black"
@@ -181,6 +194,18 @@
                     android:layout_marginTop="2dp"
                     android:layout_marginLeft="2dp"
                     android:layout_marginRight="2dp">
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/white"
+                        android:background="@android:color/black"
+                        android:layout_marginRight="3dp"
+                        android:textStyle="bold"
+                        android:id="@+id/textViewHospital0"
+                        android:layout_column="0" />
 
                     <TextView
                         android:layout_weight="1"
@@ -285,14 +310,15 @@
                         android:layout_height="wrap_content"
                         android:layout_column="9"
                         android:background="@android:color/black"
-                        android:layout_marginRight="0dp"/>
+                        android:layout_marginRight="3dp"/>
 
-                    <TextView
+                    <ImageView
                         android:layout_weight="1"
-                        android:id="@+id/imageView2"
+                        android:id="@+id/imageViewPlay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_column="10"
+                        android:src="@drawable/play"
                         android:background="@android:color/black"
                         android:layout_marginRight="0dp"/>
 
