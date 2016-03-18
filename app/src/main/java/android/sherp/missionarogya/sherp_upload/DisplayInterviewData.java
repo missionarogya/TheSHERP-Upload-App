@@ -43,6 +43,18 @@ public class DisplayInterviewData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_display_interview_data);
+
+        final Button exit1 = (Button) findViewById(R.id.exit1);
+        exit1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //roll back changes
+                Intent intent = new Intent(DisplayInterviewData.this, LoginActivity.class);
+                DisplayInterviewData.this.startActivity(intent);
+                DisplayInterviewData.this.finish();
+            }
+        });
+
         String interviewee = "";
         String qasetId = "";
         String venue = "";
@@ -56,10 +68,10 @@ public class DisplayInterviewData extends AppCompatActivity {
                     JSONArray interviewArray = new JSONArray(sherpData.getInterviewData());
                     for(int i=0; i<interviewArray.length(); i++){
 
-                        TableRow row = new TableRow(this);
+                        final TableRow row = new TableRow(this);
                         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT);
                         row.setLayoutParams(lp);
-                        row.setPadding(8, 8, 8, 8);
+                        row.setPadding(2, 2, 2, 2);
                         row.setBackgroundColor(Color.WHITE);
                         row.setGravity(Gravity.CENTER);
 
@@ -68,56 +80,42 @@ public class DisplayInterviewData extends AppCompatActivity {
                         qasetId = interviewDetails.getString("qaset_id");
 
                         TextView txtQasetId = new TextView(this);
-                        txtQasetId.setText(qasetId);
+                        txtQasetId.setText(" " + qasetId + " ");
                         txtQasetId.setGravity(Gravity.CENTER);
                         txtQasetId.setTextColor(Color.WHITE);
                         txtQasetId.setBackgroundColor(Color.BLACK);
                         txtQasetId.setTypeface(Typeface.DEFAULT);
                         txtQasetId.setLayoutParams(new TableRow.LayoutParams(0));
                         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams)txtQasetId.getLayoutParams();
-                        params.setMargins(0, 0, 10, 0);
+                        params.setMargins(0, 0, 2, 0);
                         txtQasetId.setLayoutParams(params);
                         row.addView(txtQasetId);
-
-                        venue = interviewDetails.getString("venue");
-
-                        TextView txtVenue = new TextView(this);
-                        txtVenue.setText(venue);
-                        txtVenue.setGravity(Gravity.CENTER);
-                        txtVenue.setTextColor(Color.WHITE);
-                        txtVenue.setBackgroundColor(Color.BLACK);
-                        txtVenue.setTypeface(Typeface.DEFAULT);
-                        txtVenue.setLayoutParams(new TableRow.LayoutParams(5));
-                        LinearLayout.LayoutParams qasetParams = (LinearLayout.LayoutParams)txtVenue.getLayoutParams();
-                        qasetParams.setMargins(0, 0, 10, 0);
-                        txtVenue.setLayoutParams(qasetParams);
-                        row.addView(txtVenue);
 
                         interviewer = interviewDetails.getString("interviewer_id");
 
                         TextView txtInterviewer = new TextView(this);
-                        txtInterviewer.setText(interviewer);
+                        txtInterviewer.setText(" " + interviewer + " ");
                         txtInterviewer.setGravity(Gravity.CENTER);
                         txtInterviewer.setTextColor(Color.WHITE);
                         txtInterviewer.setBackgroundColor(Color.BLACK);
                         txtInterviewer.setTypeface(Typeface.DEFAULT);
                         txtInterviewer.setLayoutParams(new TableRow.LayoutParams(1));
                         LinearLayout.LayoutParams interviewerParams = (LinearLayout.LayoutParams)txtInterviewer.getLayoutParams();
-                        interviewerParams.setMargins(0, 0, 10, 0);
+                        interviewerParams.setMargins(0, 0, 2, 0);
                         txtInterviewer.setLayoutParams(interviewerParams);
                         row.addView(txtInterviewer);
 
                         interviewee = interviewDetails.getString("interviewee_id");
 
                         TextView txtInterviewee = new TextView(this);
-                        txtInterviewee.setText(interviewee);
+                        txtInterviewee.setText(" " + interviewee + " ");
                         txtInterviewee.setGravity(Gravity.CENTER);
                         txtInterviewee.setTextColor(Color.WHITE);
                         txtInterviewee.setBackgroundColor(Color.BLACK);
                         txtInterviewee.setTypeface(Typeface.DEFAULT);
                         txtInterviewee.setLayoutParams(new TableRow.LayoutParams(2));
                         LinearLayout.LayoutParams intervieweeParams = (LinearLayout.LayoutParams)txtInterviewee.getLayoutParams();
-                        intervieweeParams.setMargins(0, 0, 10, 0);
+                        intervieweeParams.setMargins(0, 0, 2, 0);
                         txtInterviewee.setLayoutParams(intervieweeParams);
                         row.addView(txtInterviewee);
 
@@ -126,85 +124,118 @@ public class DisplayInterviewData extends AppCompatActivity {
                         interviewEndTime = interviewTime.getString("enddt_tm");
 
                         TextView txtInterviewStartTime = new TextView(this);
-                        txtInterviewStartTime.setText(interviewStartTime);
+                        txtInterviewStartTime.setText(" " + interviewStartTime + " ");
                         txtInterviewStartTime.setGravity(Gravity.CENTER);
                         txtInterviewStartTime.setTextColor(Color.WHITE);
                         txtInterviewStartTime.setBackgroundColor(Color.BLACK);
                         txtInterviewStartTime.setTypeface(Typeface.DEFAULT);
                         txtInterviewStartTime.setLayoutParams(new TableRow.LayoutParams(3));
                         LinearLayout.LayoutParams interviewStartTimeParams = (LinearLayout.LayoutParams)txtInterviewStartTime.getLayoutParams();
-                        interviewStartTimeParams.setMargins(0, 0, 10, 0);
+                        interviewStartTimeParams.setMargins(0, 0, 2, 0);
                         txtInterviewStartTime.setLayoutParams(interviewStartTimeParams);
                         row.addView(txtInterviewStartTime);
 
                         TextView txtInterviewEndTime = new TextView(this);
-                        txtInterviewEndTime.setText(interviewEndTime);
+                        txtInterviewEndTime.setText(" " + interviewEndTime + " ");
                         txtInterviewEndTime.setGravity(Gravity.CENTER);
                         txtInterviewEndTime.setTextColor(Color.WHITE);
                         txtInterviewEndTime.setBackgroundColor(Color.BLACK);
                         txtInterviewEndTime.setTypeface(Typeface.DEFAULT);
                         txtInterviewEndTime.setLayoutParams(new TableRow.LayoutParams(4));
                         LinearLayout.LayoutParams interviewEndTimeParams = (LinearLayout.LayoutParams)txtInterviewEndTime.getLayoutParams();
-                        interviewEndTimeParams.setMargins(0, 0, 10, 0);
+                        interviewEndTimeParams.setMargins(0, 0, 2, 0);
                         txtInterviewEndTime.setLayoutParams(interviewEndTimeParams);
                         row.addView(txtInterviewEndTime);
 
+                        venue = interviewDetails.getString("venue");
+
+                        TextView txtVenue = new TextView(this);
+                        txtVenue.setText(" "+venue+" ");
+                        txtVenue.setGravity(Gravity.CENTER);
+                        txtVenue.setTextColor(Color.WHITE);
+                        txtVenue.setBackgroundColor(Color.BLACK);
+                        txtVenue.setTypeface(Typeface.DEFAULT);
+                        txtVenue.setLayoutParams(new TableRow.LayoutParams(5));
+                        LinearLayout.LayoutParams qasetParams = (LinearLayout.LayoutParams)txtVenue.getLayoutParams();
+                        qasetParams.setMargins(0, 0, 2, 0);
+                        txtVenue.setLayoutParams(qasetParams);
+                        row.addView(txtVenue);
 
                         JSONArray interviewAnswers = interviewDetails.getJSONArray("answer");
                         for(int k=0; k<interviewAnswers.length(); k++){
 
-                            TextView txtAnswers = new TextView(this);
-
                             JSONObject interviewAnswersObj = interviewAnswers.getJSONObject(k);
                             String question = interviewAnswersObj.getString("question");
-                            String answer = interviewAnswersObj.getString("answer");
-
-                            txtAnswers.setText(answer);
+                            String answer = " "+interviewAnswersObj.getString("answer")+" ";
 
                             if(question.equals("q_district_eng")){
+                                TextView txtAnswers = new TextView(this);
+                                txtAnswers.setText(answer);
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(6));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
-                                answerParams.setMargins(0, 0, 10, 0);
+                                answerParams.setMargins(0, 0, 2, 0);
                                 txtAnswers.setLayoutParams(answerParams);
+                                txtAnswers.setGravity(Gravity.CENTER);
+                                txtAnswers.setTextColor(Color.WHITE);
+                                txtAnswers.setBackgroundColor(Color.BLACK);
+                                txtAnswers.setTypeface(Typeface.DEFAULT);
+                                row.addView(txtAnswers);
                             }else if(question.equals("q_block_eng")){
+                                TextView txtAnswers = new TextView(this);
+                                txtAnswers.setText(answer);
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(7));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
-                                answerParams.setMargins(0, 0, 10, 0);
+                                answerParams.setMargins(0, 0, 2, 0);
                                 txtAnswers.setLayoutParams(answerParams);
+                                txtAnswers.setGravity(Gravity.CENTER);
+                                txtAnswers.setTextColor(Color.WHITE);
+                                txtAnswers.setBackgroundColor(Color.BLACK);
+                                txtAnswers.setTypeface(Typeface.DEFAULT);
+                                row.addView(txtAnswers);
                             }else if(question.equals("q_village_eng")){
+                                TextView txtAnswers = new TextView(this);
+                                txtAnswers.setText(answer);
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(8));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
-                                answerParams.setMargins(0, 0, 10, 0);
+                                answerParams.setMargins(0, 0, 2, 0);
                                 txtAnswers.setLayoutParams(answerParams);
+                                txtAnswers.setGravity(Gravity.CENTER);
+                                txtAnswers.setTextColor(Color.WHITE);
+                                txtAnswers.setBackgroundColor(Color.BLACK);
+                                txtAnswers.setTypeface(Typeface.DEFAULT);
+                                row.addView(txtAnswers);
                             }else if(question.equals("q_awccode_eng")){
+                                TextView txtAnswers = new TextView(this);
+                                txtAnswers.setText(answer);
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(9));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
-                                answerParams.setMargins(0, 0, 10, 0);
+                                answerParams.setMargins(0, 0, 2, 0);
                                 txtAnswers.setLayoutParams(answerParams);
+                                txtAnswers.setGravity(Gravity.CENTER);
+                                txtAnswers.setTextColor(Color.WHITE);
+                                txtAnswers.setBackgroundColor(Color.BLACK);
+                                txtAnswers.setTypeface(Typeface.DEFAULT);
+                                row.addView(txtAnswers);
                             }
-
-                            txtAnswers.setGravity(Gravity.CENTER);
-                            txtAnswers.setTextColor(Color.WHITE);
-                            txtAnswers.setBackgroundColor(Color.BLACK);
-                            txtAnswers.setTypeface(Typeface.DEFAULT);
-                            row.addView(txtAnswers);
                         }
-                        ImageView audio = new ImageView(this);
-                        audio.setPadding(0, 0, 2, 0);
+                        final ImageView audio = new ImageView(this);
+                        audio.setPadding(0, 0, 0, 0);
                         audio.setImageResource(R.drawable.play);
                         audio.setBackgroundColor(Color.BLACK);
                         audio.setLayoutParams(new TableRow.LayoutParams(10));
                         row.addView(audio);
 
-                        if(!interviewee.equals("") && interviewee.length()>0){
-                            final String audioFile = interviewee + ".mp3";
-                            audio.setOnClickListener(new View.OnClickListener() {
+                        final String audioFile = interviewee + ".mp3";
+                        audio.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    playMusic(audioFile);
+                                    try {
+                                        playMusic(audioFile);
+                                    }catch(Exception e){
+                                        Toast.makeText(DisplayInterviewData.this, "Error: "+e.getStackTrace()[0].getLineNumber()+e.toString(), Toast.LENGTH_LONG).show();
+                                    }
                                 }
-                            });
-                        }
+                        });
                         table.addView(row);
                     }
                 }catch(JSONException e){
@@ -216,18 +247,6 @@ public class DisplayInterviewData extends AppCompatActivity {
         }catch(Exception e){
             Toast.makeText(DisplayInterviewData.this, "Error: "+e.toString(), Toast.LENGTH_LONG).show();
         }
-
-        final Button exit = (Button) findViewById(R.id.exit);
-        exit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //roll back changes
-                Intent intent = new Intent(DisplayInterviewData.this, LoginActivity.class);
-                DisplayInterviewData.this.startActivity(intent);
-                DisplayInterviewData.this.finish();
-            }
-        });
-
     }
 
     private boolean validateJSON(String jsonContent) throws Exception{

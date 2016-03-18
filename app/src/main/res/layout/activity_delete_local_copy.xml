@@ -40,6 +40,8 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
+        android:clickable="false"
         android:layout_marginTop="250dp"
         android:text="Download Interview Data from Server"
         android:textSize="20dp"

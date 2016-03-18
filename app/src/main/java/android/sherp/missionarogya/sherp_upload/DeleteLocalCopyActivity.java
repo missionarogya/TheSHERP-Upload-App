@@ -31,6 +31,42 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_local_copy);
 
+
+        final Button downloadDataFromServer = (Button) findViewById(R.id.buttonDownloadData);
+        downloadDataFromServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                downloadDataFromServer.setClickable(false);
+                try {
+                    if (downloadFromServer()) {
+                        final ImageButton go = (ImageButton) findViewById(R.id.go);
+                        go.setVisibility(View.VISIBLE);
+                        go.setClickable(true);
+                        go.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                logfile.setLogMessage("");
+                                Logging.setInstance(logfile);
+                                Intent intent = new Intent(DeleteLocalCopyActivity.this, DisplayInterviewData.class);
+                                DeleteLocalCopyActivity.this.startActivity(intent);
+                                DeleteLocalCopyActivity.this.finish();
+                            }
+                        });
+                        logmessage = logmessage + "Interview Data successfully downloaded from server." + "\n";
+                        Toast.makeText(getApplicationContext(), "Interview Data successfully downloaded from server.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        logmessage = logmessage + "There was an error downloading Interview Data from the server." + "\n";
+                        Toast.makeText(getApplicationContext(), "There was an error downloading Interview Data from the server.", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    logmessage = logmessage + e.toString() + "\n";
+                    Toast.makeText(getApplicationContext(), "Error:" + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+                logfile.setLogMessage(logmessage);
+                Logging.setInstance(logfile);
+            }
+        });
+
         final Button deleteLocalCopy = (Button) findViewById(R.id.buttonDeleteLocalCopy);
         deleteLocalCopy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,43 +81,11 @@ public class DeleteLocalCopyActivity extends AppCompatActivity {
                 logmessage = logmessage + "\nExiting from app.\n-------------------------------------------------------------------------------------------------------------------------------------------------\n";
                 logfile.setLogMessage(logmessage);
                 Logging.setInstance(logfile);
+                downloadDataFromServer.setVisibility(View.VISIBLE);
+                downloadDataFromServer.setClickable(true);
             }
         });
 
-        final Button downloadDataFromServer = (Button) findViewById(R.id.buttonDownloadData);
-        downloadDataFromServer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                downloadDataFromServer.setClickable(false);
-                try {
-                    if(downloadFromServer()){
-                        final ImageButton go = (ImageButton) findViewById(R.id.go);
-                        go.setVisibility(View.VISIBLE);
-                        go.setClickable(true);
-                        go.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                logfile.setLogMessage("");
-                                Logging.setInstance(logfile);
-                                Intent intent = new Intent(DeleteLocalCopyActivity.this, DisplayInterviewData.class);
-                                DeleteLocalCopyActivity.this.startActivity(intent);
-                                DeleteLocalCopyActivity.this.finish();
-                            }
-                        });
-                        logmessage = logmessage + "Interview Data successfully downloaded from server." +"\n";
-                        Toast.makeText(getApplicationContext(),"Interview Data successfully downloaded from server.",Toast.LENGTH_SHORT).show();
-                    }else{
-                        logmessage = logmessage + "There was an error downloading Interview Data from the server." +"\n";
-                        Toast.makeText(getApplicationContext(),"There was an error downloading Interview Data from the server.",Toast.LENGTH_SHORT).show();
-                    }
-                }catch(Exception e){
-                    logmessage = logmessage + e.toString()+"\n";
-                    Toast.makeText(getApplicationContext(),"Error:"+e.toString(),Toast.LENGTH_SHORT).show();
-                }
-                logfile.setLogMessage(logmessage);
-                Logging.setInstance(logfile);
-            }
-        });
         final Button exit = (Button) findViewById(R.id.exit);
         exit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -195,15 +199,7 @@ class JSONDownloader extends AsyncTask<String, Void, String> {
             logmessage = logmessage + "\nDownloading from server....\n";
             URL url = new URL("http://springdemo11-sampledemosite.rhcloud.com/profile/GetInterviewDataToServer");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            //conn.setDoOutput(true);
             conn.setRequestMethod("POST");
-            //conn.setRequestProperty("Content-Type", "application/json");
-            //logmessage = logmessage + logfile.getJsonString() + "\n";
-            //String input = "{\"answers\":"+logfile.getJsonString()+"}";
-            //OutputStream os = conn.getOutputStream();
-            //os.flush();
-            //os.write(input.getBytes());
-            //os.flush();
             BufferedReader br = new BufferedReader(new InputStreamReader(
                     (conn.getInputStream())));
             logmessage = logmessage + "Response from server: "+"\n";
