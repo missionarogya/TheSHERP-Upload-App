@@ -166,9 +166,20 @@ public class DisplayInterviewData extends AppCompatActivity {
 
                             JSONObject interviewAnswersObj = interviewAnswers.getJSONObject(k);
                             String question = interviewAnswersObj.getString("question");
-                            String answer = " "+interviewAnswersObj.getString("answer")+" ";
+                            String answer = interviewAnswersObj.getString("answer");
 
                             if(question.equals("q_district_eng")){
+                                if(answer.equals("1")){
+                                    answer = " Patna ";
+                                }else if(answer.equals("2")){
+                                    answer = " Purnia ";
+                                }else if(answer.equals("3")){
+                                    answer = " Bhagalpur ";
+                                }else if(answer.equals("4")){
+                                    answer = " Gopalganj ";
+                                }else if(answer.equals("5")){
+                                    answer = " Champaran ";
+                                }
                                 TextView txtAnswers = new TextView(this);
                                 txtAnswers.setText(answer);
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(6));
@@ -182,7 +193,7 @@ public class DisplayInterviewData extends AppCompatActivity {
                                 row.addView(txtAnswers);
                             }else if(question.equals("q_block_eng")){
                                 TextView txtAnswers = new TextView(this);
-                                txtAnswers.setText(answer);
+                                txtAnswers.setText(" "+answer+" ");
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(7));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
                                 answerParams.setMargins(0, 0, 2, 0);
@@ -194,7 +205,7 @@ public class DisplayInterviewData extends AppCompatActivity {
                                 row.addView(txtAnswers);
                             }else if(question.equals("q_village_eng")){
                                 TextView txtAnswers = new TextView(this);
-                                txtAnswers.setText(answer);
+                                txtAnswers.setText(" "+answer+" ");
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(8));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
                                 answerParams.setMargins(0, 0, 2, 0);
@@ -206,7 +217,7 @@ public class DisplayInterviewData extends AppCompatActivity {
                                 row.addView(txtAnswers);
                             }else if(question.equals("q_awccode_eng")){
                                 TextView txtAnswers = new TextView(this);
-                                txtAnswers.setText(answer);
+                                txtAnswers.setText(" "+answer+" ");
                                 txtAnswers.setLayoutParams(new TableRow.LayoutParams(9));
                                 LinearLayout.LayoutParams answerParams = (LinearLayout.LayoutParams)txtAnswers.getLayoutParams();
                                 answerParams.setMargins(0, 0, 2, 0);
@@ -221,6 +232,8 @@ public class DisplayInterviewData extends AppCompatActivity {
                         final ImageView audio = new ImageView(this);
                         audio.setPadding(0, 0, 0, 0);
                         audio.setImageResource(R.drawable.play);
+                        audio.setVisibility(View.VISIBLE);
+                        audio.setClickable(true);
                         audio.setBackgroundColor(Color.BLACK);
                         audio.setLayoutParams(new TableRow.LayoutParams(10));
                         row.addView(audio);
@@ -230,7 +243,7 @@ public class DisplayInterviewData extends AppCompatActivity {
                                 @Override
                                 public void onClick(View v) {
                                     try {
-                                        playMusic(audioFile);
+                                        playMusic(audioFile, audio);
                                     }catch(Exception e){
                                         Toast.makeText(DisplayInterviewData.this, "Error: "+e.getStackTrace()[0].getLineNumber()+e.toString(), Toast.LENGTH_LONG).show();
                                     }
@@ -292,13 +305,11 @@ public class DisplayInterviewData extends AppCompatActivity {
     }
 
 
-    private void playMusic(String audioName){
+    private void playMusic(String audioName, ImageView audio){
         int resume;
         if(currentlyPlaying.equals(audioName)){
             resume = 1;
-        }
-        else
-        {
+        }else{
             currentlyPlaying = audioName;
             resume = 0;
         }
@@ -326,13 +337,14 @@ public class DisplayInterviewData extends AppCompatActivity {
             if (fd != null ) {
                 if (mp.isPlaying() && resume==1) {
                     mp.pause();
-                }
-                else {
+                    audio.setBackgroundColor(Color.DKGRAY);
+                }else {
                     mp.reset();
                     mp.setDataSource(fd);
                     mp.prepare();
                     mp.start();
                     fis.close();
+                    audio.setBackgroundColor(Color.GRAY);
                 }
             }
         }catch (FileNotFoundException e) {
