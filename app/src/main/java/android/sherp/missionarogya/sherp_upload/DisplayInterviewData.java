@@ -240,14 +240,14 @@ public class DisplayInterviewData extends AppCompatActivity {
 
                         final String audioFile = interviewee + ".mp3";
                         audio.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    try {
-                                        playMusic(audioFile, audio);
-                                    }catch(Exception e){
-                                        Toast.makeText(DisplayInterviewData.this, "Error: "+e.getStackTrace()[0].getLineNumber()+e.toString(), Toast.LENGTH_LONG).show();
-                                    }
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    playMusic(audioFile, audio);
+                                } catch (Exception e) {
+                                    Toast.makeText(DisplayInterviewData.this, "Error: " + e.getStackTrace()[0].getLineNumber() + e.toString(), Toast.LENGTH_LONG).show();
                                 }
+                            }
                         });
                         table.addView(row);
                     }
